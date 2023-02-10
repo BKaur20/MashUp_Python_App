@@ -2,14 +2,14 @@ from youtube_search import YoutubeSearch
 import streamlit as st
 from pytube import YouTube
 from moviepy.editor import *
-//from moviepy.editor import VideoFileClip,concatenate_videoclips
-//from moviepy.editor import concatenate_audioclips, AudioFileClip
+from moviepy.editor import VideoFileClip,concatenate_videoclips
+from moviepy.editor import concatenate_audioclips, AudioFileClip
 import smtplib
 from email.message import EmailMessage
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-//from email.mime.base import MIMEBase
-//from email import encoders
+from email.mime.base import MIMEBase
+from email import encoders
 from time import sleep
 import re
 import zipfile
