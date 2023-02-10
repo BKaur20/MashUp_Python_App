@@ -1,0 +1,4 @@
+youtube-search 2.1.2
+streamlit 1.18.0
+pytube 12.1.2
+moviepy 1.0.3
