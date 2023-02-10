@@ -14,9 +14,9 @@ setup(
   long_description_content_type='text/markdown',
   author = 'Bisman Kaur',
   author_email = 'k.bisman16@gmail.com',
-  url = 'https://github.com/BKaur20/Topsis-Python-Package.git',
-  download_url = 'https://github.com/BKaur20/Topsis-Python-Package/archive/refs/heads/main.zip',
-  keywords = ['topsis', 'python', 'pypi', 'csv', 'xlsx', 'xls', 'cli'],
+  url = 'https://github.com/BKaur20/MashUp_Python_App.git',
+  download_url = 'https://github.com/BKaur20/MashUp_Python_App/archive/refs/heads/main.zip',
+  keywords = ['python', 'pypi', 'csv', 'xlsx', 'xls', 'cli'],
   install_requires=[
           'numpy',
           'pandas',
