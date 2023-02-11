@@ -1,6 +1,7 @@
 from youtube_search import YoutubeSearch
 import streamlit as st
 from pytube import YouTube
+import pytube
 from moviepy.editor import *
 from moviepy.editor import VideoFileClip
 from moviepy.editor import concatenate_audioclips
@@ -19,6 +20,11 @@ def downloadVideo(singer,n):
 	output = YoutubeSearch(search,max_results = n).to_dict()
 	for i in output:
 		ytVideo = YouTube('https://www.youtube.com' + i['url_suffix'])
+		try:
+    			streams = ytVideo.streams
+		except pytube.exceptions.VideoUnavailable:
+    			print('Video is unavaialable, skipping.')
+		else:
 		vid = ytVideo.streams.filter(file_extension = 'mp4').first()
 		vid.download(output_path=dest)
 
