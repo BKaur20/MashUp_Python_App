@@ -25,8 +25,7 @@ def downloadVideo(singer,n):
 		except pytube.exceptions.VideoUnavailable:
     			print('Video is unavaialable, skipping.')
 		else:
-			vid = ytVideo.streams.filter(file_extension = 'mp4').first()
-			vid.download(output_path=dest)
+			streams.download(output_path=dest)
 
 def trimToAudio(i):
 	clips = []
