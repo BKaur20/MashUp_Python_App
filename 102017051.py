@@ -36,7 +36,7 @@ def trimToAudio(i):
 def send_mail(to, content):
 
     email_address = "bkaur_be20@thapar.edu"
-    email_password = "betech#compsci009"
+    email_password = "bdbfdsjbbfew123"
 
     msg = MIMEMultipart("")
     msg['Subject'] = "MashUp Songs Of Your Favourite Singer"
