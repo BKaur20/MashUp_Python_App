@@ -10,66 +10,65 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
+import zipfile
+import re
 import os
 
 def downloadVideo(singer,n):
-	search_query = singer + 'video'
-	output = YoutubeSearch(search_query,max_results = n).to_dict()
+	search = singer + 'songs'
+	output = YoutubeSearch(search,max_results = n).to_dict()
 	for i in output:
 		ytVideo = YouTube('https://www.youtube.com' + i['url_suffix'])
 		vid = ytVideo.streams.filter(file_extension = 'mp4').first()
-		dest = "D:\predictiveAnalysis\Mashup\Video_files"
-		output_file = vid.download(output_path=dest)
-		Path,ext = os.path.splitext(output_file)
-		ext = ".mp4"
-		vid = VideoFileClip(os.path.join(Path + ext))
+		vid.download(output_path=dest)
 
 def trimToAudio(i):
-	folder = "D:\predictiveAnalysis\Mashup\Video_files"
 	clips = []
-	for file in os.listdir(folder):
-			filePath = os.path.join(folder,file)
+	for file in os.listdir(dest):
+			filePath = os.path.join(dest,file)
 			subClip = VideoFileClip(filePath).subclip(0,i)
 			Audio = subClip.audio
 			clips.append(Audio)
 	trimmed = concatenate_audioclips(clips)
-	trimmed.write_audiofile('MashUp.mp3')
+	trimmed.write_audiofile('102017051-output.mp3')
 
 
 def send_mail(to, content):
 
-    email_address = "k.bisman16@gmail.com"
-    email_to = to
-    email_password = "hadsjgadfufdd"
-    # create email
-    msg = EmailMessage()
-    msg = MIMEMultipart("alternative")
-    msg['Subject'] = "MashUp Result File"
+    email_address = "bkaur_be20@thapar.edu"
+    email_password = "betech#compsci009"
+
+    msg = MIMEMultipart("")
+    msg['Subject'] = "MashUp Songs Of Your Favourite Singer"
     msg['From'] = email_address
     msg['To'] = to 
 
-    part = MIMEText(content, "plain")
-    msg.attach(part)
-    filename = content
-    attachment= open(filename, 'rb') 
-    attachment_package = MIMEBase('application', 'octet-stream')
-    attachment_package.set_payload((attachment).read())
-    encoders.encode_base64(attachment_package)
-    attachment_package.add_header('Content-Disposition', "attachment; filename= " + filename)
-    msg.attach(attachment_package)
-    text = msg.as_string()
+    attachment = open(content,'rb')
+    obj = MIMEBase('application','octet-stream')
+    obj.set_payload((attachment).read())
+    encoders.encode_base64(obj)
+    obj.add_header('Content-Disposition',"attachment; filename= "+content)
+    msg.attach(obj)
 
     # send email
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
         smtp.login(email_address, email_password)
-        smtp.sendmail(email_address, email_to, text)
+        smtp.send_message(msg)
+        smtp.quit()
+    print("YOUR MAIL HAS BEEN SENT SUCCESSFULLY")
 
+def zip(file):
+    final='102017051-output.zip'
+    zipped=zipfile.ZipFile(final,'w')
+    zipped.write(file,compress_type=zipfile.ZIP_DEFLATED)
+    zipped.close()
+    return final
 
 def mainScript(singer,num,duration,to):
 	downloadVideo(singer,num)
 	trimToAudio(duration)
-	file = 'MashUp.mp3'
-	send_mail(to,file)
+	file = '102017051-output.mp3'
+	send_mail(to,zip(file))
 
 form = st.form(key='my_form')
 singer = form.text_input(label='Enter your Favourite Singer',value='')
@@ -77,6 +76,7 @@ n = form.text_input(label='Number of Videos',value=0)
 dur = form.text_input(label='Duration of every Video',value=0)
 mailTo = form.text_input(label='Email',value='')
 submit_button = form.form_submit_button(label='Submit')
+regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
 if submit_button:
 	if not singer.strip():
 		st.error('Enter Name of singer')
@@ -84,8 +84,8 @@ if submit_button:
 		st.error('Enter Number of Videos')
 	elif int(dur)==0:
 		st.error("Enter correct Duration")
+	elif not re.match(regex,mailTo):
+		st.error('Enter correct Email')
 	else:
-		newFolder = "D:\predictiveAnalysis\Mashup\Video_files"
-		for fileName in os.listdir(newFolder):
-			filePath = os.path.join(newFolder,fileName)
+		dest = "D:\predictiveAnalysis\Mashup\VidFiles"
 		mainScript(singer,int(n),int(dur),mailTo)
